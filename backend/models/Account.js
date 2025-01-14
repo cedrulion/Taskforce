@@ -1,9 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const accountSchema = mongoose.Schema({
+const accountSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    type: { type: String, enum: ['Bank', 'Mobile Money', 'Cash'], required: true },
-    balance: { type: Number, default: 0 },
-}, { timestamps: true });
+    email: { type: String, required: true, unique: true },
+    type: { type: String, required: true },
+    balance: { type: Number, required: true },
+    password: { type: String, required: true }, // Ensure this field exists
+});
 
-module.exports = mongoose.model('Account', accountSchema);
+const Account = mongoose.model('Account', accountSchema);
+
+export default Account;

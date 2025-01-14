@@ -4,7 +4,9 @@ import Navbar from './components/NavBar';
 import CreateCategory from './pages/CreateCategoryPage';
 import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
-import Transactions from './pages/Transactions'; // Add the Transactions page import
+import Transactions from './pages/Transactions'; 
+import CreateAccount from './pages/CreateAccount';
+import Login from './pages/Login';
 
 const App = () => (
   <Router>
@@ -12,6 +14,9 @@ const App = () => (
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/transactions" element={<Transactions />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/create-account" element={<CreateAccount />} />
       <Route path="/reports" element={<Reports />} />
       <Route path="/create-category" element={<CreateCategory />} />
     </Routes>

@@ -6,9 +6,31 @@ const TransactionsList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchTransactions();
-      setTransactions(data);
+      try {
+        // Fetch transactions from the API
+        const { data } = await fetchTransactions();
+        
+        // Get the user ID from localStorage
+        const userId = JSON.parse(localStorage.getItem('user'))?.id;  // Assuming the user object has 'id'
+        console.log('User ID from localStorage:', userId);
+
+        if (!userId) {
+          console.error('User ID not found in localStorage');
+          return;
+        }
+
+        // Filter transactions based on account ID (ensure txn.account is converted to string)
+        const filteredTransactions = data.filter((txn) => txn.account?._id.toString() === userId);
+
+        console.log('Filtered transactions:', filteredTransactions);
+
+        // Update the state with the filtered transactions
+        setTransactions(filteredTransactions);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
     };
+
     fetchData();
   }, []);
 
