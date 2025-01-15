@@ -34,35 +34,25 @@ To run this project locally, make sure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
-   cd <project_name>
+   git clone https://github.com/cedrulion/Taskforce.git
+   
 Install dependencies:
 
 bash
-Copy code
+
 cd backend
 npm install
 Configure your environment:
 
-Create a .env file and add the following:
-env
-Copy code
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-Start the backend server:
 
-bash
-Copy code
+
 npm start
 Setting Up the Frontend
 Install frontend dependencies:
 
-bash
-Copy code
+
 cd frontend
 npm install
-Start the frontend development server:
 
-bash
-Copy code
 npm start
+
