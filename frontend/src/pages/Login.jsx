@@ -1,44 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/api'; // Assuming you have the login function in the services/api.js file
+import { login } from '../services/api'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Hook to navigate after login
+  const navigate = useNavigate(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(''); // Reset the error message before starting the login process
+    setError(''); 
   
     try {
-      // Call the login function to authenticate the user and get the response
+      
       const response = await login(email, password);
       
-      const { token, user } = response.data; // Assuming the response includes token and user data
+      const { token, user } = response.data; 
   
       if (!token || !user) {
         throw new Error('No token or user data received.');
       }
   
-      // Store the token and user data in localStorage
+     
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user)); // Save user data to localStorage
+      localStorage.setItem('user', JSON.stringify(user)); 
   
       console.log('Login successful');
       console.log('Token:', token);
       console.log('User:', user);
   
-      // After successful login, redirect to the dashboard
+      
       navigate('/dashboard');
     } catch (err) {
-      // Handle error and set an error message to display to the user
+      
       const errorMessage =
         err.response?.data?.message || err.message || 'Login failed, please try again.';
       
-      setError(errorMessage); // Display the error message
-      console.error('Login error:', err); // Log the error for debugging
+      setError(errorMessage); 
+      console.error('Login error:', err); 
     }
   };
   
@@ -86,6 +86,12 @@ const Login = () => {
           >
             Login
           </button>
+          <p className="text-sm text-center mt-4 ">
+            Already have an account?{' '}
+            <a href="/create-account" className="hover:underline">
+              SignUp
+            </a>
+          </p>
         </form>
       </div>
     </div>

@@ -4,7 +4,7 @@ const transactionSchema = mongoose.Schema({
     account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
     type: { type: String, enum: ['Income', 'Expense'], required: true },
     amount: { type: Number, required: true },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     date: { type: Date, default: Date.now },
 }, { timestamps: true });
 

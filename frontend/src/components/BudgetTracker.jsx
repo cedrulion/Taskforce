@@ -7,12 +7,30 @@ const BudgetTracker = () => {
 
   useEffect(() => {
     const calculateExpenses = async () => {
-      const { data } = await fetchTransactions();
-      const totalExpenses = data
-        .filter((txn) => txn.type === 'Expense')
-        .reduce((acc, curr) => acc + curr.amount, 0);
-      setExpenses(totalExpenses);
+      try {
+        const { data } = await fetchTransactions();
+
+        // Get the user ID from localStorage
+        const userId = JSON.parse(localStorage.getItem('user'))?.id; // Assuming user object has 'id'
+        if (!userId) {
+          console.error('User ID not found in localStorage');
+          return;
+        }
+
+        // Filter transactions based on account ID matching the user's ID
+        const filteredTransactions = data.filter(
+          (txn) => txn.account?._id.toString() === userId && txn.type === 'Expense'
+        );
+
+        // Calculate total expenses
+        const totalExpenses = filteredTransactions.reduce((acc, curr) => acc + curr.amount, 0);
+
+        setExpenses(totalExpenses);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
     };
+
     calculateExpenses();
   }, []);
 

@@ -41,7 +41,8 @@ const TransactionsList = () => {
         {transactions.map((txn) => (
           <li key={txn._id} className="border-b py-2">
             <span>{txn.type}</span>: <span>{txn.amount}</span> 
-            (<span>{txn.category.name}</span>)
+            <span className='ml-3'>{txn.category ? txn.category.name : ''}</span>
+
           </li>
         ))}
       </ul>

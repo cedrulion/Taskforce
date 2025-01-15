@@ -2,26 +2,27 @@ import React, { useEffect, useState } from 'react';
 import TransactionForm from '../components/TransactionForm';
 import TransactionsList from '../components/TransactionsList';
 import BudgetTracker from '../components/BudgetTracker';
+import VisualSummary from '../components/VisualSummary';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null); // State to store user information
+  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get user data from localStorage
+
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
 
     if (!token || !storedUser) {
-      navigate('/login'); // Redirect to login if token or user data is missing
+      navigate('/login'); 
     } else {
       setUser(storedUser);
     }
   }, [navigate]);
 
   const handleCreateAccountRedirect = () => {
-    navigate('/create-account'); // Redirect to the CreateAccount page
+    navigate('/create-account'); 
   };
 
   return (
@@ -32,6 +33,7 @@ const Dashboard = () => {
           <TransactionForm onTransactionAdded={() => window.location.reload()} />
           <TransactionsList />
           <BudgetTracker />
+          <VisualSummary />
         </>
       ) : (
         <div className="text-center mt-20">

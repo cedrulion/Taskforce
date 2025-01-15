@@ -3,6 +3,7 @@ import { createCategory, fetchCategories } from '../services/api'; // Importing 
 
 const CreateCategory = () => {
   const [categoryName, setCategoryName] = useState('');
+  const [subcategories, setSubcategories] = useState('');
   const [message, setMessage] = useState('');
   const [categories, setCategories] = useState([]);
 
@@ -25,11 +26,12 @@ const CreateCategory = () => {
     }
 
     try {
-      const response = await createCategory({ name: categoryName });
+      const response = await createCategory({ name: categoryName, subcategories: subcategories });
       if (response.data) {
         setMessage('Category created successfully!');
-        getCategories(); // Reload categories after creation
-        setCategoryName(''); // Reset input field
+        getCategories(); 
+        setCategoryName(''); 
+        setSubcategories('');
       }
     } catch (error) {
       setMessage('Error creating category');
@@ -56,6 +58,16 @@ const CreateCategory = () => {
               type="text"
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Subcategory</label>
+            <input
+              type="text"
+              value={subcategories}
+              onChange={(e) => setSubcategories(e.target.value)}
               className="w-full p-2 border rounded"
               required
             />

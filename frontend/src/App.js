@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/NavBar';
+import AccountList from './components/AccountList';
 import CreateCategory from './pages/CreateCategoryPage';
 import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
@@ -18,6 +19,7 @@ const App = () => (
       <Route path="/login" element={<Login />} />
       <Route path="/create-account" element={<CreateAccount />} />
       <Route path="/reports" element={<Reports />} />
+      <Route path="/account" element={<AccountList />} />
       <Route path="/create-category" element={<CreateCategory />} />
     </Routes>
   </Router>

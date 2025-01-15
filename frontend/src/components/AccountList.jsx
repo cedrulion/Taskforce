@@ -1,37 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAccounts } from '../services/api'; // Assuming you have an API service to fetch accounts
+import { useNavigate } from 'react-router-dom';
+import { fetchAccounts } from '../services/api';
 
 const AccountList = () => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadAccounts = async () => {
       try {
-        const response = await fetchAccounts(); // Fetch accounts from the API
-        setAccounts(response.data); // Store accounts in state
-        setLoading(false); // Set loading to false once data is fetched
+        const response = await fetchAccounts();
+        const userId = JSON.parse(localStorage.getItem('user'))?.id;
+
+        if (!userId) {
+          setError('User ID not found in localStorage');
+          setLoading(false);
+          return;
+        }
+
+        const filteredAccounts = response.data.filter((account) => account._id === userId);
+        setAccounts(filteredAccounts);
+        setLoading(false);
       } catch (err) {
-        setError('Failed to load accounts'); // Set error if fetching fails
-        setLoading(false); // Set loading to false in case of error
+        setError('Failed to load accounts');
+        setLoading(false);
       }
     };
 
     loadAccounts();
-  }, []); // Empty dependency array means this will run only once when the component mounts
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading text while fetching accounts
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Show error message if there is an error
+    return <div>{error}</div>;
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Account List</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Account List</h2>
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+      </div>
       <table className="min-w-full table-auto border-collapse border border-gray-300">
         <thead>
           <tr>

@@ -11,7 +11,13 @@ const getTransactions = asyncHandler(async (req, res) => {
 // Create a transaction
 const createTransaction = asyncHandler(async (req, res) => {
     const { account, type, amount, category } = req.body;
-    const transaction = new Transaction({ account, type, amount, category });
+    const transactionData = { account, type, amount };
+
+    if (type === 'Expense' && category) {
+        transactionData.category = category;
+    }
+
+    const transaction = new Transaction(transactionData);
     await transaction.save();
 
     const accountToUpdate = await Account.findById(account);

@@ -12,11 +12,23 @@ const ReportGenerator = () => {
       const { data } = await fetchTransactions();
       console.log("Fetched transactions:", data); // Debug log
 
-      // Convert transaction date from string to Date object (in UTC)
-      const transactions = data.map(item => ({
-        ...item,
-        date: new Date(item.date), // Parse date in UTC (no local time conversion)
-      }));
+      // Get the user ID from localStorage
+      const userId = JSON.parse(localStorage.getItem('user'))?.id; // Assuming the user object has 'id'
+      console.log('User ID from localStorage:', userId);
+
+      if (!userId) {
+        console.error('User ID not found in localStorage');
+        setError('User ID not found. Please log in again.');
+        return;
+      }
+
+      // Filter transactions based on account ID
+      const transactions = data
+        .filter((txn) => txn.account?._id.toString() === userId)
+        .map((item) => ({
+          ...item,
+          date: new Date(item.date), // Parse date in UTC (no local time conversion)
+        }));
 
       // If no date range is selected, show all transactions
       const filtered = transactions.filter((txn) => {
