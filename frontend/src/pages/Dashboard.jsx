@@ -15,7 +15,7 @@ const Dashboard = () => {
     const token = localStorage.getItem('token');
 
     if (!token || !storedUser) {
-      navigate('/login'); 
+      
     } else {
       setUser(storedUser);
     }
