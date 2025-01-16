@@ -22,7 +22,7 @@ const Dashboard = () => {
   }, [navigate]);
 
   const handleCreateAccountRedirect = () => {
-    navigate('/create-account'); 
+    navigate('/login'); 
   };
 
   return (
