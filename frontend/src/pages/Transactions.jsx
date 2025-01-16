@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { fetchTransactions} from '../services/api';
+import { fetchTransactions } from '../services/api';
 import { format } from 'date-fns';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [transactionType, setTransactionType] = useState(''); 
 
-  // Fetch transactions from the API
+
   useEffect(() => {
     const getTransactions = async () => {
       try {
-        // Fetch transactions from the API
+ 
         const { data } = await fetchTransactions();
-        
-        // Get the user ID from localStorage
-        const userId = JSON.parse(localStorage.getItem('user'))?.id;  // Assuming the user object has 'id'
+
+    
+        const userId = JSON.parse(localStorage.getItem('user'))?.id; 
         console.log('User ID from localStorage:', userId);
 
         if (!userId) {
@@ -21,13 +23,14 @@ const Transactions = () => {
           return;
         }
 
-        // Filter transactions based on account ID (ensure txn.account is converted to string)
-        const filteredTransactions = data.filter((txn) => txn.account?._id.toString() === userId);
 
-        console.log('Filtered transactions:', filteredTransactions);
+        const filteredData = data.filter((txn) => txn.account?._id.toString() === userId);
 
-        // Update the state with the filtered transactions
-        setTransactions(filteredTransactions);
+        console.log('Filtered transactions:', filteredData);
+
+
+        setTransactions(filteredData);
+        setFilteredTransactions(filteredData); 
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }
@@ -37,12 +40,37 @@ const Transactions = () => {
   }, []);
 
 
+  const handleFilterChange = (event) => {
+    const selectedType = event.target.value;
+    setTransactionType(selectedType);
+
+  
+    if (selectedType) {
+      const filtered = transactions.filter((txn) => txn.type === selectedType);
+      setFilteredTransactions(filtered);
+    } else {
+      setFilteredTransactions(transactions);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-6">Transactions</h2>
 
-      {/* Transaction List */}
+      <div className="mb-6">
+        <label htmlFor="transactionType" className="mr-2">Filter by Type:</label>
+        <select
+          id="transactionType"
+          value={transactionType}
+          onChange={handleFilterChange}
+          className="p-2 border rounded"
+        >
+          <option value="">All</option>
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-xl font-semibold mb-4">Transaction List</h3>
         <table className="w-full table-auto">
@@ -55,8 +83,8 @@ const Transactions = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.length > 0 ? (
-              transactions.map((transaction) => (
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction) => (
                 <tr key={transaction._id} className="border-b">
                   <td className="p-2">{format(new Date(transaction.date), 'MM/dd/yyyy')}</td>
                   <td className="p-2">${transaction.amount}</td>
@@ -66,7 +94,7 @@ const Transactions = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="p-2 text-center">No transactions available</td>
+                <td colSpan="4" className="p-2 text-center">No transactions available</td>
               </tr>
             )}
           </tbody>

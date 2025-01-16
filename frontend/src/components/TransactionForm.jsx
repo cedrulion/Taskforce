@@ -7,7 +7,8 @@ const TransactionForm = ({ onTransactionAdded }) => {
         amount: '',
         category: '',
         subcategory: '',
-        account: '',
+        account: '', 
+        accountType: '', 
     });
 
     const [categories, setCategories] = useState([]);
@@ -27,34 +28,41 @@ const TransactionForm = ({ onTransactionAdded }) => {
             const userId = JSON.parse(localStorage.getItem('user'))?.id;
             const { data } = await fetchAccounts();
 
-            
-            const userAccounts = data.filter((account) => account.userId === userId);
+
+            const userAccounts = data.filter((account) => account._id === userId);
             setAccounts(userAccounts);
         };
         fetchAccountData();
     }, []);
 
-  
     const handleCategoryChange = (e) => {
         const selectedCategory = categories.find((cat) => cat._id === e.target.value);
         setForm((prev) => ({ ...prev, category: e.target.value, subcategory: '' }));
         setSubcategories(selectedCategory?.subcategories || []);
     };
 
-  
+    const handleAccountChange = (e) => {
+        setForm((prev) => ({ ...prev, account: e.target.value, accountType: '' }));
+    };
+
+    const handleAccountTypeChange = (e) => {
+        setForm((prev) => ({ ...prev, accountType: e.target.value }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const transactionData = { ...form };
+
             if (form.type === 'Income') {
                 delete transactionData.category;
                 delete transactionData.subcategory;
             }
 
-            
+
             await createTransaction(transactionData);
             onTransactionAdded();
-            setForm({ type: 'Income', amount: '', category: '', account: '' }); 
+            setForm({ type: 'Income', amount: '', category: '', account: '', accountType: '' });
         } catch (error) {
             console.error('Error creating transaction:', error);
             alert('Error submitting transaction');
@@ -65,7 +73,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
         <form onSubmit={handleSubmit} className="bg-gray-100 p-4 rounded shadow">
             <h2 className="text-lg font-bold mb-4">Add Transaction</h2>
 
-            {/* Type of transaction */}
+
             <div className="mb-4">
                 <label className="block mb-1">Type</label>
                 <select
@@ -78,7 +86,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
                 </select>
             </div>
 
-            {/* Amount field */}
+
             <div className="mb-4">
                 <label className="block mb-1">Amount</label>
                 <input
@@ -127,23 +135,45 @@ const TransactionForm = ({ onTransactionAdded }) => {
                 </>
             )}
 
-
+            {/* Account selection */}
             <div className="mb-4">
                 <label className="block mb-1">Account</label>
                 <select
                     value={form.account}
-                    onChange={(e) => setForm({ ...form, account: e.target.value })}
+                    onChange={handleAccountChange}
                     className="w-full p-2 border rounded"
                     required
                 >
                     <option value="">Select Account</option>
                     {accounts.map((account) => (
                         <option key={account._id} value={account._id}>
-                            {account.name} ({account.type})
+                            {account.name}
                         </option>
                     ))}
                 </select>
             </div>
+
+            {/* Account type selection */}
+            {form.account && (
+                <div className="mb-4">
+                    <label className="block mb-1">Account Type</label>
+                    <select
+                        value={form.accountType}
+                        onChange={handleAccountTypeChange}
+                        className="w-full p-2 border rounded"
+                        required
+                    >
+                        <option value="">Select Account Type</option>
+                        {accounts
+                            .find((account) => account._id === form.account)
+                            ?.accounts.map((account, index) => (
+                                <option key={index} value={account.type}>
+                                    {account.type}
+                                </option>
+                            ))}
+                    </select>
+                </div>
+            )}
 
             <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
                 Add Transaction
