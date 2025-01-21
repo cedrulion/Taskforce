@@ -23,6 +23,11 @@ This project is a **walletapp** built using **React.js**, **Node.js**, **Express
 ## How to Get Started
 
 ### Prerequisites
+you can use hosted website via this link
+---------------------------
+https://walletappfront.pages.dev/ 
+
+------------or------------------
 
 To run this project locally, make sure you have the following installed:
 
